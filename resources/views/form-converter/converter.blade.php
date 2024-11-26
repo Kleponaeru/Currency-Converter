@@ -63,7 +63,7 @@
                                 <select id="to_currency" name="to_currency"
                                     class="h-full rounded-r-lg border-l bg-gray-50 py-0 pl-3 pr-7 text-gray-700 focus:border-indigo-500 focus:ring focus:ring-indigo-200 sm:text-sm">
                                     <option value="USD">USD</option>
-                                    <option value="IDR">IDR</option>
+                                    <option value="IDR" selected>IDR</option>
                                     <option value="EUR">EUR</option>
                                     <option value="JPY">JPY</option>
                                 </select>
@@ -86,17 +86,65 @@
 </body>
 <script src="{{ asset('/js/navbar.js') }}"></script>
 <script>
-    document.getElementById('convert-btn').addEventListener('click', async function() {
-        const price = document.getElementById('price').value;
-        const fromCurrency = document.getElementById('from_currency').value;
-        const toCurrency = document.getElementById('to_currency').value;
+    const fromCurrency = document.getElementById('from_currency');
+    const toCurrency = document.getElementById('to_currency');
+    const priceInput = document.getElementById('price');
+    const convertButton = document.getElementById('convert-btn');
+    const convertedPriceInput = document.getElementById('converted-price');
 
-        if (!price || isNaN(price)) {
-            alert("Please enter a valid amount.");
+    // Disable Convert button initially
+    convertButton.disabled = true;
+
+    // Prevent selecting the same currency in both dropdowns
+    function updateCurrencyOptions() {
+        const selectedFrom = fromCurrency.value;
+        const selectedTo = toCurrency.value;
+
+        // Disable the selected "from" currency in the "to" dropdown
+        Array.from(toCurrency.options).forEach(option => {
+            option.disabled = option.value === selectedFrom;
+        });
+
+        // Disable the selected "to" currency in the "from" dropdown
+        Array.from(fromCurrency.options).forEach(option => {
+            option.disabled = option.value === selectedTo;
+        });
+    }
+
+    // Enable Convert button only if price is valid and currencies are different
+    function validateForm() {
+        const priceValue = parseFloat(priceInput.value.trim());
+        const isValidPrice = !isNaN(priceValue) && priceValue > 0;
+        const isCurrenciesDifferent = fromCurrency.value !== toCurrency.value;
+
+        // Enable or disable the Convert button
+        convertButton.disabled = !(isValidPrice && isCurrenciesDifferent);
+    }
+
+    // Event listeners
+    fromCurrency.addEventListener('change', () => {
+        updateCurrencyOptions();
+        validateForm();
+    });
+
+    toCurrency.addEventListener('change', () => {
+        updateCurrencyOptions();
+        validateForm();
+    });
+
+    priceInput.addEventListener('input', validateForm);
+
+    // Convert button click handler
+    convertButton.addEventListener('click', async function() {
+        const price = parseFloat(priceInput.value.trim());
+        const fromCurrencyValue = fromCurrency.value;
+        const toCurrencyValue = toCurrency.value;
+
+        if (!price || fromCurrencyValue === toCurrencyValue) {
+            alert("Please enter a valid amount and select different currencies.");
             return;
         }
 
-        // Send request to Laravel route
         try {
             const response = await fetch("{{ route('convert') }}", {
                 method: "POST",
@@ -106,8 +154,8 @@
                 },
                 body: JSON.stringify({
                     price: price,
-                    from_currency: fromCurrency,
-                    to_currency: toCurrency
+                    from_currency: fromCurrencyValue,
+                    to_currency: toCurrencyValue
                 })
             });
 
@@ -117,9 +165,8 @@
 
             const data = await response.json();
 
-            // Update the converted price
             if (data.success) {
-                document.getElementById('converted-price').value = data.converted_price.toFixed(2);
+                convertedPriceInput.value = data.converted_price.toFixed(2);
             } else {
                 alert(data.message || "Conversion failed.");
             }
@@ -128,6 +175,10 @@
             alert("An error occurred. Please try again.");
         }
     });
+
+    // Initialize currency options on page load
+    updateCurrencyOptions();
 </script>
+
 
 </html>
