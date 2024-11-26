@@ -8,8 +8,9 @@
 </head>
 
 <body>
-    {{-- @include('navigation.navbar') --}}
-    @include('navigation.hero-screen')
+    {{-- @include('layout.navbar') --}}
+    @include('layout.hero-screen')
+    @include('background')
     {{-- @include('form-converter.converter') --}}
 
     <script src="{{ asset('/js/navbar.js') }}"></script>

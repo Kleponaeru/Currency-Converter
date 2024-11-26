@@ -15,8 +15,8 @@
         </button>
       </div>
       <div class="hidden lg:flex lg:gap-x-12">
-        <a href="/coverter" class="text-sm/6 font-semibold text-gray-900">Converter</a>
-        <a href="#" class="text-sm/6 font-semibold text-gray-900">Features</a>
+          <a href="/" class="text-sm/6 font-semibold text-gray-900">Home</a>
+          <a href="/converter" class="text-sm/6 font-semibold text-gray-900">Converter</a>
         {{-- <a href="#" class="text-sm/6 font-semibold text-gray-900">Marketplace</a>
         <a href="#" class="text-sm/6 font-semibold text-gray-900">Company</a> --}}
       </div>
