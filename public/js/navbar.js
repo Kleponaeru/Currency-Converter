@@ -1,50 +1,24 @@
-   // JavaScript for the profile dropdown toggle
-   document.getElementById('user-menu-button').addEventListener('click', function() {
-    var dropdown = document.getElementById('dropdown-menu');
+document.addEventListener("DOMContentLoaded", function () {
+    const openMenuBtn = document.getElementById("open-menu-btn");
+    const closeMenuBtn = document.getElementById("close-menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const backdrop = document.getElementById("backdrop");
 
-    // Toggle visibility with transition
-    if (dropdown.classList.contains('hidden')) {
-        dropdown.classList.remove('hidden');
-        dropdown.classList.add('opacity-100', 'scale-100'); // Show with transition
-    } else {
-        dropdown.classList.add('hidden');
-        dropdown.classList.remove('opacity-100', 'scale-100'); // Hide with transition
-    }
-});
+    // Open the mobile menu
+    openMenuBtn.addEventListener("click", function () {
+        mobileMenu.classList.remove("hidden"); // Show menu
+        backdrop.classList.remove("hidden"); // Show backdrop
+    });
 
-// JavaScript for the mobile menu toggle
-document.getElementById('mobile-menu-button').addEventListener('click', function() {
-    var mobileMenu = document.getElementById('mobile-menu');
+    // Close the mobile menu
+    closeMenuBtn.addEventListener("click", function () {
+        mobileMenu.classList.add("hidden"); // Hide menu
+        backdrop.classList.add("hidden"); // Hide backdrop
+    });
 
-    // Toggle visibility with transition (fade + scale effect)
-    if (mobileMenu.classList.contains('hidden')) {
-        mobileMenu.classList.remove('hidden');
-        mobileMenu.classList.add('opacity-100', 'scale-100'); // Show with transition
-        mobileMenu.classList.remove('scale-95', 'opacity-0'); // Remove the collapsed state
-    } else {
-        mobileMenu.classList.add('hidden');
-        mobileMenu.classList.remove('opacity-100', 'scale-100'); // Hide with transition
-        mobileMenu.classList.add('scale-95', 'opacity-0'); // Collapse it back with transition
-    }
-});
-
-// Optional: Close the dropdown when clicking outside of it
-document.addEventListener('click', function(event) {
-    var dropdown = document.getElementById('dropdown-menu');
-    var button = document.getElementById('user-menu-button');
-    var mobileMenu = document.getElementById('mobile-menu');
-    var mobileMenuButton = document.getElementById('mobile-menu-button');
-
-    // If the clicked target is outside the dropdown or button, close it
-    if (!button.contains(event.target) && !dropdown.contains(event.target)) {
-        dropdown.classList.add('hidden');
-        dropdown.classList.remove('opacity-100', 'scale-100'); // Reset the dropdown
-    }
-
-    // If the clicked target is outside the mobile menu or button, close it
-    if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
-        mobileMenu.classList.add('hidden');
-        mobileMenu.classList.remove('opacity-100', 'scale-100'); // Reset the mobile menu
-        mobileMenu.classList.add('scale-95', 'opacity-0'); // Ensure collapsed state on close
-    }
+    // Close the menu if the backdrop is clicked
+    backdrop.addEventListener("click", function () {
+        mobileMenu.classList.add("hidden");
+        backdrop.classList.add("hidden");
+    });
 });
